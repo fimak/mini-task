@@ -1,9 +1,21 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
+import {
+  IonAvatar,
+  IonContent,
+  IonHeader,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonPage,
+  IonTitle,
+  IonToolbar
+} from '@ionic/react';
 import './Tab1.css';
+import useUsers from '../hooks/useUsers';
 
 const Tab1: React.FC = () => {
+  const { users, loading, error } = useUsers();
+
   return (
     <IonPage>
       <IonHeader>
@@ -12,12 +24,23 @@ const Tab1: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 1</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name="Tab 1 page" />
+        {loading && <p>Loading...</p>}
+        {error && <p>Error: {error.message}</p>}
+        {users && (
+          <IonList>
+            {users.map((user, index) => (
+              <IonItem key={index}>
+                <IonAvatar slot="start">
+                  <img src={user.picture} alt={user.name} />
+                </IonAvatar>
+                <IonLabel>
+                  <h2>{user.name}</h2>
+                  <p>{user.email}</p>
+                </IonLabel>
+              </IonItem>
+            ))}
+          </IonList>
+        )}
       </IonContent>
     </IonPage>
   );
