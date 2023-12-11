@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   IonAvatar,
   IonContent,
@@ -19,6 +19,7 @@ import useUsers from '../hooks/useUsers';
 const Tab1: React.FC = () => {
   const { users: initialUsers, loading, error } = useUsers();
   const [users, setUsers] = useState(initialUsers);
+  const slidingItemRef = useRef<HTMLIonItemSlidingElement>(null);
 
   useEffect(() => {
     setUsers(initialUsers);
@@ -29,6 +30,9 @@ const Tab1: React.FC = () => {
       const updatedUsers = [...users];
       updatedUsers.splice(index, 1);
       setUsers(updatedUsers);
+      if (slidingItemRef.current) {
+        slidingItemRef.current.closeOpened();
+      }
     }
   };
 
@@ -45,7 +49,7 @@ const Tab1: React.FC = () => {
         {users && (
           <IonList>
             {users.map((user, index) => (
-              <IonItemSliding key={index}>
+              <IonItemSliding key={index} ref={slidingItemRef}>
                 <IonItem>
                   <IonAvatar slot="start">
                     <img src={user.picture} alt={user.name} />
